@@ -11,10 +11,10 @@ public class LinearCalculator{
     //For example, "(1,2)" and "(3,4)" would be two parameter values 
     //You will have to parse the string into 4 integers, representing the 2 points.
     public LinearCalculator(String coord1, String coord2){ // <--add 2 string parameters to this constructor
-
-    String x1temp = coord1.substring(1,coord1.indexOf(","));
+        //these use .length instead of a number to include negatives
+    String x1temp = coord1.substring(1,coord1.indexOf(",")); // gets rid of the parentheses and stops at the first number
     x1 = Integer.parseInt(x1temp);
-    String y1temp = coord1.substring(coord1.indexOf(",") + 1,coord1.length() - 1);
+    String y1temp = coord1.substring(coord1.indexOf(",") + 1,coord1.length() - 1); //starts at the second number and stops before the parentheses
     y1 = Integer.parseInt(y1temp);
     String x2temp = coord2.substring(1,coord2.indexOf(","));
     x2 = Integer.parseInt(x2temp);
@@ -39,11 +39,10 @@ public class LinearCalculator{
     //distance() -> returns a double. 
     //calculates the distance between the two points to the nearest HUNDREDTH and returns the value.
     public double distance(){
+        //this is the commented out method below, but compacted. it uses the pythagorean theorem to find the a length, using the 2 points to calculated the lengths of the legs
         double finaldis = roundedToHundredth(Math.pow(Math.pow((double)x2 - x1,2) + Math.pow((double)y2 - y1,2),0.5));
         return finaldis;
     }
-
-
 
     /*double xdistance = (double)x2 - x1;
     double ydistance = (double)y2 - y1;
@@ -59,6 +58,7 @@ public class LinearCalculator{
     //calculates the y intercept of the equation and returns the value to the nearest HUNDREDTH
     //if y-int if undefined, should return -999.99
     public double yInt(){
+        // this takes the slope and multiplies it by the value of the first x. This value is how much y has advanced since the yintercept. y1 is subtracted from it to find the y intercept
         double distanceneededtobesubtracted = slope() * x1;
         if (slope() == -999.99) {
             return -999.99;
@@ -71,6 +71,7 @@ public class LinearCalculator{
     //calculates the slope of the equations and returns the value to the nearest HUNDREDTH
     //if slope is undefined, should return -999.99
     public double slope(){
+        // This divides the difference in y by the distance of x, which is the classic slope formula. If the denominator is 0, it would be undefined, as you cant divide by 0
         double rise = y2 - y1;
         double run = x2 - x1;
         if (run != 0) {
@@ -88,10 +89,13 @@ public class LinearCalculator{
         if (slope() == -999.99) {
             return "undefined";
         } else if (yInt() == 0.0) {
+            //reduces redundancy, taking out values that equal 0
             return "y=" + slope() + "x";
         } else if (slope() == 0) {
+            //reduces redundancy, taking out values that equal 0
             return "y=" + yInt();
         } else if (yInt() < 0) {
+            // fixes a issue in which when a yintercept is 0, it would print x+-yint
             return "y=" + slope() + "x" + yInt();
         } else {
         return "y=" + slope() + "x+" + yInt();
@@ -102,12 +106,9 @@ public class LinearCalculator{
     //roundedToHundredth(double x)-> returns double
     //calculates the input to the nearest hundredth and returns that value
     public double roundedToHundredth(double x){
-        if (x > 0) {
-            return Math.round(x * 100.0) / 100.0;
-        } else {
+        // first multiplies by 100 to make the Math.round to include the hundreths place (now ones place). Then divides by 100 to return to the original state
             return Math.round(x * 100.0) / 100.0;
         }
-    }
 
     //printInfo() -> returns a string of information
     //this method is tested but you can also call it in your main method if gradle tests are 
